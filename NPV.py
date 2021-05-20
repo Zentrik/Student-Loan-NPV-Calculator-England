@@ -1,19 +1,19 @@
 #%%
+import pandas as pd
 rpi = 0.026
 cpi = 0.01
+days_elapsed = pd.Timestamp(2021, 5, 19) - pd.Timestamp(2010, 9, 30)
+SP500_daily = 3.0273 ** (1/ days_elapsed.days) # average daily returns from hedged gbp https://www.ishares.com/uk/individual/en/products/251904/ishares-sp-500-gbp-hedged-ucits-etf#chartDialog
 real_salary_growth = 0.03 # compared to cpi
 real_avg_salary_growth = 0.01
 
+# def monthly_income(i):
+    # if i // 365 < 4: # in 4 year phd
+        # return 30000 / 12
+    # else:
+        # return 120000 / 12 * (1 + cpi + real_salary_growth) ** (i // 365) # monthly income with salary increase yearly
 def monthly_income(i):
-    if i // 365 < 4: # in 4 year phd
-        return 30000 / 12
-    else:
-        return 120000 / 12 * (1 + cpi + real_salary_growth) ** (i // 365) # monthly income with salary increase yearly
-def monthly_income(i):
-    if i // 365 < 4: # in 4 year phd
-        return 30000 / 12
-    else:
-        return 120000 / 12 * (1 + cpi + real_salary_growth) ** (i // 365) # monthly income with salary increase yearly
+        return 40000 / 12 * (1 + cpi + real_salary_growth) ** (i // 365) # monthly income with salary increase yearly
 def taxband_monthly_income(monthly_band, i):
     return monthly_band * (1 + cpi + real_avg_salary_growth) ** (i // 365)
 def monthly_repayment(days_elapsed):
@@ -35,7 +35,6 @@ def working_interest(days_elapsed):
     else:
         return 0
 # %%
-import pandas as pd
 daterange = pd.date_range("2021-10-05", "2026-04-05")
 
 debt = 0
@@ -50,6 +49,7 @@ for single_date in daterange:
 # %%
 payments = 0
 npv_payments = 0
+npv_SP500_payments = 0
 
 daterange = pd.date_range("2026-04-06", "2056-04-05")
 for single_date in daterange:
@@ -71,3 +71,5 @@ for single_date in daterange:
 
     days_elapsed_from_freshers = single_date - pd.Timestamp("2021-10-05")
     npv_payments += repayment / ((1 + cpi) ** (days_elapsed_from_freshers.days / 365))
+    npv_SP500_payments += repayment / (SP500_daily ** days_elapsed_from_freshers.days)
+# %%
